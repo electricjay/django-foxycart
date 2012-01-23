@@ -1,0 +1,34 @@
+This package is a starting point for integrating foxycart into your django project.
+It provides a basis for supporting foxycart's datafeed and supports sending commands
+to the foxycart API
+
+How to use it:
+
+copy this package to a "foxycart" directory in the apps directory of your django
+project
+
+in your settings.py:
+   set FOXYCART_DATAFEED_KEY to be the api key for your foxycart store
+   set FOXYCART_API_URL to be the api url for your foxycart store
+   add foxycart to your INSTALLED_APPS
+   if necessary add the urls you are using to the AUTHENTICATED_EXEMPT_URLS
+
+Add this url line to your urlpatterns in urls.py
+   url(r"^foxycart/", include("foxycart.urls")),
+
+Run the tests via "python manage.py test foxycart"
+  There should be 2 successfull tests that verify the encryption and xml parsing work
+  There are 3 tests that will fail.
+    These tests are the tests of the foxyfeed view.
+    You will have to supply your own test data and add data verification logic to
+    the foxyfeed view in order to make these tests pass.
+
+To capture the data sent by foxycart to your server:
+  In the capture_foxyfeed function set the variable "capture_name" to the name of the file you would like the data saved to.
+  On the foxycart website in the "advanced settings" page - set the datafeed url to "http://yoursite.com/foxycart/xmlcapture"
+  Build a test order on your website and complete the transaction.
+  The data will be saved in the fixtures directory inside of the foxycart app directory
+
+Now that you have captured some test data you can start adding your application logic to the foxyfeed function in views.py.  Update the view testing methods in tests.py to use your captured data.
+
+  It is your responsibility to check for errors in the submitted order.  At the minimum you need to check for duplicated transaction ids and verify the pricing of your products.
